@@ -65,7 +65,7 @@ Vagrant.configure("2") do |config|
 
       if ENV['http_proxy']
         config.vm.provision 'shell', :inline =>
-        "echo \"Acquire::http { Proxy \\\"#{ENV['http_proxy']}\\\" }\" > /etc/apt/apt.conf.d/03proxy"
+        "echo \"Acquire::http { Proxy \\\"#{ENV['http_proxy']}\\\" }\" > /etc/apt/apt.conf.d/03proxy; echo \"export http_proxy=\\\"#{ENV['http_proxy']}\\\" \" > /etc/profile.d/proxy.sh"
       end
 
       # run apt-get update and install pip
