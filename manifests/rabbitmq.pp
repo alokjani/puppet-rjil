@@ -14,10 +14,24 @@
 #
 
 
-class rjil::rabbitmq {
+class rjil::rabbitmq (
+  $rabbit_admin_user = undef,
+  $rabbit_admin_pass = undef,
+) {
 
   rjil::test { 'check_rabbitmq.sh': }
 
   include ::rabbitmq
+
+  rabbitmq_user { $rabbit_admin_user:
+    admin    => true,
+    password => $rabbit_admin_pass,
+  }
+
+  rabbitmq_user_permissions { "${rabbit_admin_user}@/":
+    configure_permission => '.*',
+    read_permission      => '.*',
+    write_permission     => '.*',
+  }
 
 }

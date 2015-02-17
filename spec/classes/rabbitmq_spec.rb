@@ -7,6 +7,8 @@ describe 'rjil::rabbitmq' do
     {
       'rabbitmq::manage_repos' => false,
       'rabbitmq::admin_enable' => false,
+      'rabbitmq::delete_guest_user' => true,
+      'rabbitmq::port' => '5672',
     }
   end
 
@@ -23,8 +25,30 @@ describe 'rjil::rabbitmq' do
       should contain_file('/usr/lib/jiocloud/tests/check_rabbitmq.sh')
       should contain_class('rabbitmq').with({
         'manage_repos' => false,
-        'admin_enable' => false
+        'admin_enable' => false,
+        'delete_guest_user' => true,
+        'port' => '5672',
       })
+    end
+  end
+
+  context 'with custom MQ login' do
+    let :params do
+      {
+        'rabbit_admin_user' => 'rabbit',
+        'rabbit_admin_pass' => 'rabbit',
+      }
+    end
+
+    it do
+      should contain_Rabbitmq_user('rabbit') \
+        .with_admin(true) \
+        .with_password('rabbit')
+
+      should contain_Rabbitmq_user_permissions('rabbit@/') \
+        .with_configure_permission('.*') \
+        .with_read_permission('.*') \
+        .with_write_permission('.*')
     end
   end
 
