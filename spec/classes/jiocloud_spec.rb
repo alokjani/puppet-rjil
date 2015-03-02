@@ -55,4 +55,13 @@ describe 'rjil::jiocloud' do
     })}
  
   end
+
+  context 'Pin Puppet' do
+    it { should contain_apt__pin('00-puppet').with({
+      'packages' => 'puppet puppet-common',
+      'priority' => '501',
+      'version'  => '3.7.*',
+    })}
+  end
+
 end

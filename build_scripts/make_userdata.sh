@@ -8,6 +8,7 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
 export layout="${layout}"
+export PUPPET_VER="3.7.2-1puppetlabs1"
 release="\$(lsb_release -cs)"
 if [ -n "${git_protocol}" ]; then
   export git_protocol="${git_protocol}"
@@ -38,7 +39,7 @@ then
   dpkg -i internal.deb
 fi
 apt-get update
-apt-get install -y puppet software-properties-common puppet-jiocloud jiocloud-ssl-certificate
+apt-get install -y puppet=${PUPPET_VER} puppet-common=${PUPPET_VER} software-properties-common puppet-jiocloud jiocloud-ssl-certificate
 if [ -n "${python_jiocloud_source_repo}" ]; then
   apt-get install -y python-pip python-jiocloud python-dev libffi-dev libssl-dev git
   pip install -e "${python_jiocloud_source_repo}@${python_jiocloud_source_branch}#egg=jiocloud"
@@ -72,6 +73,7 @@ if [ -n "${puppet_modules_source_repo}" ]; then
   puppet apply -e "ini_setting { basemodulepath: path => \"/etc/puppet/puppet.conf\", section => main, setting => basemodulepath, value => \"/etc/puppet/modules.overrides:/etc/puppet/modules\" }"
   puppet apply -e "ini_setting { default_manifest: path => \"/etc/puppet/puppet.conf\", section => main, setting => default_manifest, value => \"/etc/puppet/manifests.overrides/site.pp\" }"
   puppet apply -e "ini_setting { disable_per_environment_manifest: path => \"/etc/puppet/puppet.conf\", section => main, setting => disable_per_environment_manifest, value => \"true\" }"
+  puppet apply -e "apt::pin { '00-puppet': explanation => 'Lets use 3.x for now', packages => 'puppet puppet-common', priority => '501', version  => '3.7.*', }"
 else
   puppet apply -e "ini_setting { default_manifest: path => \"/etc/puppet/puppet.conf\", section => main, setting => default_manifest, value => \"/etc/puppet/manifests/site.pp\" }"
 fi

@@ -75,4 +75,11 @@ class rjil::jiocloud (
     setting => 'manifestdir',
   }
 
+  apt::pin { '00-puppet':
+    explanation => 'Lets use 3.x for now',
+    packages    => 'puppet puppet-common',
+    priority    => '501',
+    version     => '3.7.*',
+  }
+
 }
