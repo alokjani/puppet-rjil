@@ -583,6 +583,15 @@ rjil::system::apt::repositories:
     repos: 'main restricted universe multiverse'
     include_src: false
 
+#####################################################
+########### Proxy/Caching Server Settings  ##########
+#####################################################
+
+rjil::http_proxy::port: 3128
+rjil::http_proxy::cache_dir_list: ['ufs /var/spool/squid3 10000 16 256']
+rjil::http_proxy::max_object_size: '50096 KB'
+rjil::http_proxy::max_object_size_in_memory: '5012 KB'
+
 ########################################
 ########## Contrail Settings ###########
 ########################################
